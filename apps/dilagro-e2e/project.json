@@ -1,0 +1,10 @@
+{
+  "name": "dilagro-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/dilagro-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["dilagro"],
+  "// targets": "to see all targets run: nx show project dilagro-e2e --web",
+  "targets": {}
+}
