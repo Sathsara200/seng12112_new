@@ -1,0 +1,12 @@
+<h2>Daily Stock List</h2>
+
+<ul *ngIf="dailyStocks$ | async as dailyStocks; else loading">
+    <li *ngFor="let stock of dailyStocks">
+        <strong>Date:</strong> {{ stock.date | date: 'medium' }} |
+        <strong>Amount:</strong> {{ stock.amount }}
+    </li>
+</ul>
+
+<ng-template #loading>
+    <p>Loading daily stock data...</p>
+</ng-template>
