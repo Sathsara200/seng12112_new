@@ -1,13 +1,22 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { AppState } from './state/app/app.state';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [RouterModule, CommonModule, MatProgressBarModule, MatToolbarModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'dilagro';
+  private store = inject(Store);
+
+  email$: Observable<string | undefined> = this.store.select(AppState.email);
+  
+  loading$: Observable<boolean> = this.store.select(AppState.loading);
 }
