@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { Store } from '@ngrx/store';
+import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AppState } from './state/app/app.state';
 
