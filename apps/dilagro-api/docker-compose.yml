@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  backend:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: npm run start:dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: super_admin
+      MONGO_INITDB_ROOT_PASSWORD: G20JXVQWERSSDDSX

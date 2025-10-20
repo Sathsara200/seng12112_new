@@ -1,0 +1,28 @@
+{
+  "name": "my-lib",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "my-lib/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/my-lib",
+        "main": "my-lib/src/index.ts",
+        "tsConfig": "my-lib/tsconfig.lib.json",
+        "assets": ["my-lib/*.md"],
+        "format": ["cjs"],
+        "generatePackageJson": true
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "my-lib/jest.config.ts"
+      }
+    }
+  }
+}

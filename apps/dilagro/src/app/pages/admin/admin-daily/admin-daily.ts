@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DailyStock } from 'apps/dilagro/src/app/services/daily-stock/daily-stock';
 import { AsyncPipe, JsonPipe, DatePipe, NgIf, NgFor } from '@angular/common'; // ✅ import needed pipes/directives
-import { IDailyStock } from '@seng41293-2025/model';
+import { IDailyStock } from '@seng12112-new/my-lib';
 
 @Component({
   selector: 'app-admin-daily',
