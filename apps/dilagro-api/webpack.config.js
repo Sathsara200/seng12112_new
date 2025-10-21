@@ -14,7 +14,7 @@ module.exports = {
       compiler: 'tsc',
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
-      assets: ['./src/assets'],
+      assets: ['apps/dilagro-api/src/assets'], // ✅ fixed path
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,

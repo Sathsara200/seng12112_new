@@ -1,7 +1,7 @@
 {
   "name": "dilagro-api",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "dilagro-api/src",
+  "sourceRoot": "apps/dilagro-api/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -10,7 +10,7 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "dilagro-api"
+        "cwd": "apps/dilagro-api"
       },
       "configurations": {
         "development": {

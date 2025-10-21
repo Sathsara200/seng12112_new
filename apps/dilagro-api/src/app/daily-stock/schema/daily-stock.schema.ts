@@ -9,5 +9,5 @@ export class DailyStock implements IDailyStock {
     @Prop() amount: number;
 }
 
-export type CatDocument = HydratedDocument<DailyStock>;
+export type DailyStockDocument = HydratedDocument<DailyStock>;
 export const DailyStockSchema = SchemaFactory.createForClass(DailyStock);
