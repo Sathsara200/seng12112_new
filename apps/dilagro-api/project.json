@@ -12,43 +12,21 @@
         "args": ["--node-env=production"],
         "cwd": "apps/dilagro-api",
         "assets": [
-           {
-              "input": "apps/dilagro-api/environments",
-              "glob": "*.env",
-              "output": "environments"
-            }
-          ]
-        },
+          {
+            "input": "apps/dilagro-api/environments",
+            "glob": "*.env",
+            "output": "environments"
+          }
+        ]
+      },
       "configurations": {
         "development": {
           "args": ["--node-env=development"]
+        },
+        "production": {
+          "args": ["--node-env=production"]
         }
       }
-    },
-    "prune-lockfile": {
-      "dependsOn": ["build"],
-      "cache": true,
-      "executor": "@nx/js:prune-lockfile",
-      "outputs": [
-        "{workspaceRoot}/dist/dilagro-api/package.json",
-        "{workspaceRoot}/dist/dilagro-api/package-lock.json"
-      ],
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "copy-workspace-modules": {
-      "dependsOn": ["build"],
-      "cache": true,
-      "outputs": ["{workspaceRoot}/dist/dilagro-api/workspace_modules"],
-      "executor": "@nx/js:copy-workspace-modules",
-      "options": {
-        "buildTarget": "build"
-      }
-    },
-    "prune": {
-      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
-      "executor": "nx:noop"
     },
     "serve": {
       "continuous": true,

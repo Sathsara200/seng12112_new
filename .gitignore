@@ -44,3 +44,5 @@ Thumbs.db
 .github/instructions/nx.instructions.md
 
 .angular
+docker/dilagro-api/build.tar.xz
+docker/dilagro-api/package.json
