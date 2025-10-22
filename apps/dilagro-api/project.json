@@ -10,8 +10,15 @@
       "options": {
         "command": "webpack-cli build",
         "args": ["--node-env=production"],
-        "cwd": "apps/dilagro-api"
-      },
+        "cwd": "apps/dilagro-api",
+        "assets": [
+           {
+              "input": "apps/dilagro-api/environments",
+              "glob": "*.env",
+              "output": "environments"
+            }
+          ]
+        },
       "configurations": {
         "development": {
           "args": ["--node-env=development"]
