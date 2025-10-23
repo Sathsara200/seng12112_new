@@ -1,19 +1,26 @@
 <form class="login-form" [formGroup]="loginFormGroup">
-    <h3>Login</h3>
+  <h3>Login</h3>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Eamil</mat-label>
-        <input matInput [formControl]="emailCtrl" />
-        <mat-error *ngIf="emailCtrl.hasError  ('email')">
-            Please enter a valid email address
-        </mat-error>
-        <mat-error *ngIf="emailCtrl.hasError('required')">
-            Email is <strong>required</strong>
-        </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Password</mat-label>
-        <input type="password" matInput formControlName="password" />
-    </mat-form-field>
-    <button mat-raised-button color="primary" [disabled]="!loginFormGroup.valid" (click)="onLogin()">Login</button>
+  <mat-form-field appearance="outline">
+    <mat-label>Username</mat-label>
+    <input matInput formControlName="username" />
+    <mat-error *ngIf="loginFormGroup.get('username')?.hasError('required')">
+      Username is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input type="password" matInput formControlName="password" />
+    <mat-error *ngIf="loginFormGroup.get('password')?.hasError('required')">
+      Password is <strong>required</strong>
+    </mat-error>
+    <mat-error *ngIf="loginFormGroup.get('password')?.hasError('minlength')">
+      Password must be at least 3 characters
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" [disabled]="!loginFormGroup.valid" (click)="onLogin()">
+    Login
+  </button>
 </form>
