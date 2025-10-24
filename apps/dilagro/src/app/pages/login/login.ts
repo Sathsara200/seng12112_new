@@ -39,7 +39,6 @@ export class Login {
 }
 
 
-
   //emailCtrl = new FormControl('tharidu@gmail.com', [Validators.required, Validators.email]);
 
   //loginFormGroup = new FormGroup({
