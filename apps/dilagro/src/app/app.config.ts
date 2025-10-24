@@ -12,6 +12,7 @@ import { AppState } from './state/app/app.state';
 import { provideServiceWorker } from '@angular/service-worker';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'; // ✅ Add this
 import { BaseUrlInterceptor } from './services/_interceptors/base-url-interceptor/base-url-interceptor';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +24,9 @@ export const appConfig: ApplicationConfig = {
         developmentMode: isDevMode(),
       }),
       HttpClientModule // ✅ Add this here
+    ),
+    importProvidersFrom(
+      NgxsStoragePluginModule.forRoot()
     ),
     {
       provide: HTTP_INTERCEPTORS,

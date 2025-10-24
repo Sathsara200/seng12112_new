@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { Store } from '@ngxs/store';
+import { Login } from '../../state/app/app.actions';
+
 
 @Component({
   selector: 'app-login',
@@ -13,18 +15,31 @@ import { Store } from '@ngxs/store';
   imports: [CommonModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
-  providers: [AuthService] // ✅ Provide AuthService here
+  providers: [AuthService],
 })
-export class Login {
+export class LoginComponent {  // ✅ renamed class to LoginComponent (avoid clash)
   loginFormGroup = new FormGroup({
     username: new FormControl('sathsara', [Validators.required]),
     password: new FormControl('Sa34@@111', [Validators.required, Validators.minLength(3)]),
   });
 
-  constructor(private router: Router, private store: Store, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private store: Store,
+    private authService: AuthService
+  ) {}
 
   onLogin() {
     const value = this.loginFormGroup.value;
+    if (this.loginFormGroup.invalid) {
+      console.warn('Form is invalid');
+      return;
+    }
+
+    // ✅ Dispatch NGXS action (if you’re using one)
+    this.store.dispatch(new Login(value.username!, value.password!));
+
+    // ✅ Call AuthService for API login
     this.authService.signIn(value.username ?? '', value.password ?? '')
       .subscribe({
         next: (res) => {
@@ -33,7 +48,7 @@ export class Login {
         },
         error: (err) => {
           console.error('Login failed', err);
-        }
+        },
       });
   }
 }
