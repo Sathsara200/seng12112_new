@@ -24,7 +24,7 @@ it('should create a new city', async () => {
   console.log('Created City ID:', createdCityId);
 
   // Check response body
-  expect(response.data).toHaveProperty('id');
+  expect(response.data).toHaveProperty('_id');
   expect(response.data.name).toBe(newCity.name);
 });
 
@@ -46,7 +46,7 @@ it('should retrieve a city by ID', async () => {
   const createResponse = await client.post('/city', newCity);
   expect(createResponse.status).toBe(201);
 
-  createdCityId = createResponse.data._id || createResponse.data.id; // Support either field name
+  createdCityId = createResponse.data._id; // Support either field name
   console.log('Created City ID:', createdCityId);
 
   // Verify creation response
@@ -70,7 +70,7 @@ it('should update a city name', async () => {
   expect(createResponse.status).toBe(201);
 
   // Store the created city's ID (support both `id` and `_id`)
-  createdCityId = createResponse.data._id || createResponse.data.id;
+  createdCityId = createResponse.data._id;
   console.log('Created City ID:', createdCityId);
 
   // Check response body
@@ -97,7 +97,7 @@ it('should delete a city', async () => {
   expect(createResponse.status).toBe(201);
 
   // Store the created city's ID (support both `_id` and `id`)
-  createdCityId = createResponse.data._id || createResponse.data.id;
+  createdCityId = createResponse.data._id;
   console.log('Created City ID:', createdCityId);
 
   // Check response body

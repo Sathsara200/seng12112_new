@@ -13,7 +13,7 @@ export class CityService {
   async create(createCityDto: CreateCityDto) {
   const city = new this.cityModel(createCityDto);
   const savedCity = await city.save();
-  return { id: savedCity._id.toString(), name: savedCity.name };
+  return { _id: savedCity._id.toString(), name: savedCity.name };
 }
 
   // Get all cities
