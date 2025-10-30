@@ -4,8 +4,10 @@ import { AuthModule } from './auth/auth.module'; // ← import this
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getEnvPath } from './app.helper';
+import { CityModule } from './city/city.module';
 
-const envFilePath = getEnvPath();
+
+const envFilePath: string = getEnvPath(`${__dirname}/environments`);
 
 @Module({
   imports: [
@@ -29,7 +31,8 @@ const envFilePath = getEnvPath();
       },
     }),
     DailyStockModule,
-    AuthModule, // ← add this
+    AuthModule,
+    CityModule, // ← add this
   ],
 })
 export class AppModule {}
