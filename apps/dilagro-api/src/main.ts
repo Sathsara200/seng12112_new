@@ -3,7 +3,7 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 
@@ -16,6 +16,12 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
+  
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,            // removes properties not in the DTO
+    forbidNonWhitelisted: true, // throws if unknown props exist
+    transform: true,            // transforms types (e.g., string → number)
+  }));
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

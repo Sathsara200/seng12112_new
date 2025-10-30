@@ -5,7 +5,7 @@ import { ICity } from "@seng12112-new/my-lib";
 
 @Schema()
 export class City implements ICity {
-    @Prop() name: string;
+    @Prop({type: String}) name: string;
 }
 
 export type CityDocument = HydratedDocument<ICity>;

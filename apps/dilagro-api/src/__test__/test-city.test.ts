@@ -12,15 +12,16 @@ describe('City API Tests', () => {
 
 
 it('should create a new city', async () => {
-  const newCity = { name: 'Colombo' };
+  const newCity = { name: 'colombo'};
 
   const response = await client.post('/city', newCity);
 
   // Expect status 201 Created
   expect(response.status).toBe(201);
+  console.log('Response Data:', response.data);
 
-  // Store the created city's ID for later tests
-  createdCityId = response.data.id;
+  //Store the created city's ID for later tests
+  createdCityId = response.data._id;
   console.log('Created City ID:', createdCityId);
 
   // Check response body
@@ -118,5 +119,37 @@ it('should delete a city', async () => {
   }
 });
 
+it('should not create a new city', async () => {
+  const newCity = { name: 12345};
+
+  const response = await client.post('/city', newCity);
+
+  // Expect status 400 Created
+  expect(response.status).toBe(400);
+  console.log('Response Data:', response.data);
+
 });
 
+it('should not create a new city', async () => {
+  const newCity = { name: ''};
+
+  const response = await client.post('/city', newCity);
+
+  // Expect status 400 Created
+  expect(response.status).toBe(400);
+  console.log('Response Data:', response.data);
+
+});
+
+it('should not create a new city', async () => {
+  const newCity = { name: 'sassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss'};
+
+  const response = await client.post('/city', newCity);
+
+  // Expect status 400 Created
+  expect(response.status).toBe(400);
+  console.log('Response Data:', response.data);
+
+});
+
+});
