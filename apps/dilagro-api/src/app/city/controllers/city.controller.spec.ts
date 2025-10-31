@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CityController } from './city.controller';
-import { CityService } from '../services/city.service';
+// import { CityService } from '../repository/city.repository';
 
 //describe('CityController', () => {
   //let controller: CityController;

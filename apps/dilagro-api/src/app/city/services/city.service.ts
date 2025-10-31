@@ -1,40 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateCityDto } from '../dto/create-city.dto';
-import { UpdateCityDto } from '../dto/update-city.dto';
-import { City } from '../entities/city.schema';
+import { Inject, Injectable } from "@nestjs/common";
+import { CityRepository } from "../repository/city.repository";
+import { CreateCityDto } from "../dto/create-city.dto";
+import { UpdateCityDto } from "../dto/update-city.dto";
 
 @Injectable()
 export class CityService {
-  constructor(@InjectModel(City.name) private readonly cityModel: Model<City>) {}
-
-  // Create a new city
-  async create(createCityDto: CreateCityDto) {
-  const city = new this.cityModel(createCityDto);
-  const savedCity = await city.save();
-  return { _id: savedCity._id.toString(), name: savedCity.name };
-}
-
-  // Get all cities
-  async findAll() {
-    return this.cityModel.find().exec();
+  // Service methods would go here
+  @Inject() repository:CityRepository
+  
+  create(dto:CreateCityDto){
+    return this.repository.create(dto);
   }
 
-  // Get a single city by ID
-  async findOne(id: string) {
-    return this.cityModel.findById(id).exec();
+  findAll(){
+    return this.repository.findAll();
   }
 
-  // Update a city by ID
-  async update(id: string, updateCityDto: UpdateCityDto) {
-    return this.cityModel
-      .findByIdAndUpdate(id, updateCityDto, { new: true })
-      .exec();
+  findOne(id:string){
+    return this.repository.findOne(id);
   }
 
-  // Remove a city by ID
-  async remove(id: string) {
-    return this.cityModel.findByIdAndDelete(id).exec();
+  update(id:string, dto:UpdateCityDto){
+    return this.repository.update(id,dto);
+  }
+
+  remove(id:string){
+    return this.repository.remove(id);
   }
 }
