@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateCityDto } from '../dto/create-city.dto';
 import { UpdateCityDto } from '../dto/update-city.dto';
-import { City } from '../entities/city.schema';
+import { City } from '../schemas/city.schema';
 
 @Injectable()
 export class CityRepository {
