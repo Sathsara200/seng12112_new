@@ -9,6 +9,7 @@ import { BankModule } from './bank/bank.module';
 import { CustomerModule } from './customer/customer.module';
 import { OrderModule } from './order/order.module';
 import { FeedbackModule } from './feedback/feedback.module';
+import { ProductModule } from './product/product.module';
 
 const envFilePath: string = getEnvPath(`${__dirname}/environments`);
 
@@ -39,7 +40,8 @@ const envFilePath: string = getEnvPath(`${__dirname}/environments`);
     BankModule,
     CustomerModule,
     OrderModule,
-    FeedbackModule, // ← add this
+    FeedbackModule,
+    ProductModule, // ← add this
   ],
 })
 export class AppModule {}
