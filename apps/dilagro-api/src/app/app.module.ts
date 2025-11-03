@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getEnvPath } from './app.helper';
 import { CityModule } from './city/city.module';
 import { BankModule } from './bank/bank.module';
+import { CustomerModule } from './customer/customer.module';
 
 const envFilePath: string = getEnvPath(`${__dirname}/environments`);
 
@@ -33,7 +34,8 @@ const envFilePath: string = getEnvPath(`${__dirname}/environments`);
     DailyStockModule,
     AuthModule,
     CityModule,
-    BankModule, // ← add this
+    BankModule,
+    CustomerModule, // ← add this
   ],
 })
 export class AppModule {}
