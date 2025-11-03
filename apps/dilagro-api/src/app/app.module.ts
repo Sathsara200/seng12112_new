@@ -8,6 +8,7 @@ import { CityModule } from './city/city.module';
 import { BankModule } from './bank/bank.module';
 import { CustomerModule } from './customer/customer.module';
 import { OrderModule } from './order/order.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 const envFilePath: string = getEnvPath(`${__dirname}/environments`);
 
@@ -37,7 +38,8 @@ const envFilePath: string = getEnvPath(`${__dirname}/environments`);
     CityModule,
     BankModule,
     CustomerModule,
-    OrderModule, // ← add this
+    OrderModule,
+    FeedbackModule, // ← add this
   ],
 })
 export class AppModule {}
