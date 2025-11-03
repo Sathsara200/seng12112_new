@@ -7,6 +7,7 @@ import { getEnvPath } from './app.helper';
 import { CityModule } from './city/city.module';
 import { BankModule } from './bank/bank.module';
 import { CustomerModule } from './customer/customer.module';
+import { OrderModule } from './order/order.module';
 
 const envFilePath: string = getEnvPath(`${__dirname}/environments`);
 
@@ -35,7 +36,8 @@ const envFilePath: string = getEnvPath(`${__dirname}/environments`);
     AuthModule,
     CityModule,
     BankModule,
-    CustomerModule, // ← add this
+    CustomerModule,
+    OrderModule, // ← add this
   ],
 })
 export class AppModule {}
