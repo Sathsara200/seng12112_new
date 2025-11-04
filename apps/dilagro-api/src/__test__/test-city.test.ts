@@ -126,10 +126,7 @@ it('should not create a new city', async () => {
 
   // Expect status 400 Created
   expect(response.status).toBe(400);
-  console.log('Response Data:', response.data);
-  console.log('Response Status:', response.data.statusCode);
-  console.log('Response Message:', response.data.message);
-
+  console.log('Response Data:', response.data.error);
 });
 
 
