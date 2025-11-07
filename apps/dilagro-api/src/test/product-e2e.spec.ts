@@ -22,11 +22,11 @@ describe('Product Controller (E2E)', () => {
     await app.close();
   });
 
-  it('✅ should be defined', () => {
+  it('should be defined', () => {
     expect(app).toBeDefined();
   });
 
-  it('✅ POST /product should create a new product (201)', async () => {
+  it('POST /product should create a new product (201)', async () => {
     const newProduct = { name: 'Rice', description: 'High-quality grain', price: 250, stock: 100 };
 
     const response = await request(app.getHttpServer())
@@ -37,7 +37,7 @@ describe('Product Controller (E2E)', () => {
     expect(response.body).toMatchObject(newProduct);
   });
 
-  it('❌ POST /product with invalid payload should return 400', async () => {
+  it('POST /product with invalid payload should return 400', async () => {
     const invalidProduct = { name: 123, price: 'invalid' };
 
     const response = await request(app.getHttpServer())
@@ -49,7 +49,7 @@ describe('Product Controller (E2E)', () => {
     expect(response.body.error).toBe('Bad Request');
   });
 
-  it('✅ GET /product should return all products (200)', async () => {
+  it('GET /product should return all products (200)', async () => {
     const response = await request(app.getHttpServer())
       .get('/product')
       .expect(HttpStatus.OK);
@@ -57,7 +57,7 @@ describe('Product Controller (E2E)', () => {
     expect(Array.isArray(response.body)).toBe(true);
   });
 
-  it('✅ GET /product/:id should return a product (200)', async () => {
+  it('GET /product/:id should return a product (200)', async () => {
     const fakeId = 'mockProductId123';
     const response = await request(app.getHttpServer())
       .get(`/product/${fakeId}`)
@@ -66,7 +66,7 @@ describe('Product Controller (E2E)', () => {
     expect(response.body._id).toBe(fakeId);
   });
 
-  it('✅ PATCH /product/:id should update a product (200)', async () => {
+  it('PATCH /product/:id should update a product (200)', async () => {
     const fakeId = 'mockProductId123';
     const updatedProduct = { name: 'Updated Rice', price: 275 };
 
@@ -78,7 +78,7 @@ describe('Product Controller (E2E)', () => {
     expect(response.body.name).toBe(updatedProduct.name);
   });
 
-  it('✅ DELETE /product/:id should remove a product (200)', async () => {
+  it('DELETE /product/:id should remove a product (200)', async () => {
     const fakeId = 'mockProductId123';
 
     const response = await request(app.getHttpServer())

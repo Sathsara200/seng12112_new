@@ -22,11 +22,11 @@ describe('Bank Controller (E2E)', () => {
     await app.close();
   });
 
-  it('✅ should be defined', () => {
+  it('should be defined', () => {
     expect(app).toBeDefined();
   });
 
-  it('✅ POST /bank should create a new bank (201)', async () => {
+  it('POST /bank should create a new bank (201)', async () => {
     const newBank = {
       name: 'People’s Bank',
       branchCode: 'KDY001',
@@ -43,7 +43,7 @@ describe('Bank Controller (E2E)', () => {
     expect(response.body).toMatchObject(newBank);
   });
 
-  it('❌ POST /bank with invalid payload should return 400', async () => {
+  it('POST /bank with invalid payload should return 400', async () => {
     const invalidBank = {
       name: 123,
       branchCode: '',
@@ -60,7 +60,7 @@ describe('Bank Controller (E2E)', () => {
     expect(response.body.error).toBe('Bad Request');
   });
 
-  it('✅ GET /bank should return all banks (200)', async () => {
+  it('GET /bank should return all banks (200)', async () => {
     const response = await request(app.getHttpServer())
       .get('/bank')
       .expect(HttpStatus.OK);
@@ -68,7 +68,7 @@ describe('Bank Controller (E2E)', () => {
     expect(Array.isArray(response.body)).toBe(true);
   });
 
-  it('✅ GET /bank/:id should return a bank (200)', async () => {
+  it('GET /bank/:id should return a bank (200)', async () => {
     const fakeId = '6734f4b4b37d2a43d8a7e122';
     const response = await request(app.getHttpServer())
       .get(`/bank/${fakeId}`)
@@ -77,7 +77,7 @@ describe('Bank Controller (E2E)', () => {
     expect(response.body._id).toBe(fakeId);
   });
 
-  it('✅ PATCH /bank/:id should update a bank (200)', async () => {
+  it('PATCH /bank/:id should update a bank (200)', async () => {
     const fakeId = '6734f4b4b37d2a43d8a7e122';
     const updatedBank = {
       name: 'Updated People’s Bank',
@@ -95,7 +95,7 @@ describe('Bank Controller (E2E)', () => {
     expect(response.body).toMatchObject(updatedBank);
   });
 
-  it('✅ DELETE /bank/:id should remove a bank (200)', async () => {
+  it('DELETE /bank/:id should remove a bank (200)', async () => {
     const fakeId = '6734f4b4b37d2a43d8a7e122';
     const response = await request(app.getHttpServer())
       .delete(`/bank/${fakeId}`)

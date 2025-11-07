@@ -22,11 +22,11 @@ describe('City Controller (E2E)', () => {
     await app.close();
   });
 
-  it('✅ should be defined', () => {
+  it('should be defined', () => {
     expect(app).toBeDefined();
   });
 
-  it('✅ POST /city should create a new city (201)', async () => {
+  it('POST /city should create a new city (201)', async () => {
     const newCity = { name: 'Colombo' };
     const response = await request(app.getHttpServer())
       .post('/city')
@@ -36,7 +36,7 @@ describe('City Controller (E2E)', () => {
     expect(response.body.name).toBe(newCity.name);
   });
 
-  it('❌ POST /city with invalid payload should return 400', async () => {
+  it('POST /city with invalid payload should return 400', async () => {
     const response = await request(app.getHttpServer())
       .post('/city')
       .send({ name: 12345 })
@@ -50,18 +50,18 @@ describe('City Controller (E2E)', () => {
 
   });
 
-  it('✅ GET /city should return all cities (200)', async () => {
+  it('GET /city should return all cities (200)', async () => {
     await request(app.getHttpServer()).get('/city').expect(HttpStatus.OK);
   });
 
-  it('✅ GET /city/:id should return a city (200)', async () => {
+  it('GET /city/:id should return a city (200)', async () => {
     const fakeId = '6734f4b4b37d2a43d8a7e122';
     await request(app.getHttpServer())
       .get(`/city/${fakeId}`)
       .expect(HttpStatus.OK);
   });
 
-  it('✅ PATCH /city/:id should update city (200)', async () => {
+  it('PATCH /city/:id should update city (200)', async () => {
     const fakeId = '6734f4b4b37d2a43d8a7e122';
     const updatedCity = { name: 'Kandy' };
 
@@ -73,7 +73,7 @@ describe('City Controller (E2E)', () => {
     expect(response.body.name).toBe(updatedCity.name);
   });
 
-  it('✅ DELETE /city/:id should remove city (200)', async () => {
+  it('DELETE /city/:id should remove city (200)', async () => {
     const fakeId = '6734f4b4b37d2a43d8a7e122';
     await request(app.getHttpServer())
       .delete(`/city/${fakeId}`)
