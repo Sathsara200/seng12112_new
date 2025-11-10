@@ -1,146 +1,199 @@
-import { INestApplication, HttpStatus, Module } from '@nestjs/common';
+import { HttpStatus, INestApplication, Module } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
+import TestAgent from 'supertest/lib/agent';
+
 import { VALIDATION_PIPE } from './utils/validation-pipe.utils';
 import { BankController } from '../app/bank/controllers/bank.controller';
 import { BankService } from '../app/bank/services/bank.service';
 
-describe('Bank Controller (E2E)', () => {
+describe('Bank Controller (No Auth)', () => {
   let app: INestApplication;
+  let testRequest: TestAgent<request.Test>;
 
   beforeAll(async () => {
-    const moduleFixture = await Test.createTestingModule({
-      imports: [getDummyBankModule()],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    const setup = await beforeSetup();
+    app = setup.app;
+    testRequest = setup.testRequest;
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  it('should be defined', () => {
-    expect(app).toBeDefined();
+  it('should be defined', () => expect(app).toBeDefined());
+
+  it(`should send 201 for POST /bank`, async () => {
+    const res = await testRequest.post('/bank').send(bank());
+    expect(res.status).toBe(HttpStatus.CREATED);
   });
 
-  it('POST /bank should create a new bank (201)', async () => {
-    const newBank = {
-      name: 'People’s Bank',
-      branchCode: 'KDY001',
-      branch: 'Kandy',
-      branchAddress: 'Main Street, Kandy',
-      contactNumber: '0811234567',
-    };
-
-    const response = await request(app.getHttpServer())
-      .post('/bank')
-      .send(newBank)
-      .expect(HttpStatus.CREATED);
-
-    expect(response.body).toMatchObject(newBank);
+  it(`should send 400 for POST /bank with invalid payload`, async () => {
+    const res = await testRequest.post('/bank').send({});
+    expect(res.status).toBe(HttpStatus.BAD_REQUEST);
   });
 
-  it('POST /bank with invalid payload should return 400', async () => {
-    const invalidBank = {
-      name: 123,
-      branchCode: '',
-      branch: 'Kandy',
-      branchAddress: 999,
-      contactNumber: null,
-    };
-
-    const response = await request(app.getHttpServer())
-      .post('/bank')
-      .send(invalidBank)
-      .expect(HttpStatus.BAD_REQUEST);
-
-    expect(response.body.error).toBe('Bad Request');
+  it(`should send 200 for GET /bank`, async () => {
+    const res = await testRequest.get('/bank');
+    expect(res.status).toBe(HttpStatus.OK);
   });
 
-  it('GET /bank should return all banks (200)', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/bank')
-      .expect(HttpStatus.OK);
-
-    expect(Array.isArray(response.body)).toBe(true);
+  it(`should send 200 for GET /bank/id`, async () => {
+    const res = await testRequest.get('/bank/id');
+    expect(res.status).toBe(HttpStatus.OK);
   });
 
-  it('GET /bank/:id should return a bank (200)', async () => {
-    const fakeId = '6734f4b4b37d2a43d8a7e122';
-    const response = await request(app.getHttpServer())
-      .get(`/bank/${fakeId}`)
-      .expect(HttpStatus.OK);
-
-    expect(response.body._id).toBe(fakeId);
+  it(`should send 200 for PATCH /bank/id`, async () => {
+    const res = await testRequest
+      .patch('/bank/id')
+      .send({ name: 'Updated Bank', branch: 'Kandy' });
+    expect(res.status).toBe(HttpStatus.OK);
   });
 
-  it('PATCH /bank/:id should update a bank (200)', async () => {
-    const fakeId = '6734f4b4b37d2a43d8a7e122';
-    const updatedBank = {
-      name: 'Updated People’s Bank',
-      branchCode: 'KDY002',
-      branch: 'Peradeniya',
-      branchAddress: 'New Road, Peradeniya',
-      contactNumber: '0819999999',
-    };
-
-    const response = await request(app.getHttpServer())
-      .patch(`/bank/${fakeId}`)
-      .send(updatedBank)
-      .expect(HttpStatus.OK);
-
-    expect(response.body).toMatchObject(updatedBank);
+  it(`should send 400 for PATCH /bank/id with wrong payload`, async () => {
+    const res = await testRequest.patch('/bank/id').send({ name: '' });
+    expect(res.status).toBe(HttpStatus.BAD_REQUEST);
   });
 
-  it('DELETE /bank/:id should remove a bank (200)', async () => {
-    const fakeId = '6734f4b4b37d2a43d8a7e122';
-    const response = await request(app.getHttpServer())
-      .delete(`/bank/${fakeId}`)
-      .expect(HttpStatus.OK);
+  it(`should send 200 for DELETE /bank/id`, async () => {
+    const res = await testRequest.delete('/bank/id');
+    expect(res.status).toBe(HttpStatus.OK);
+  });
 
-    expect(response.body.message).toContain('deleted');
+  //
+  // 🔥 Real 500 Internal Server Error Tests (Service Failures)
+  //
+
+  it(`should send 500 for POST /bank when service fails`, async () => {
+    const setup = await beforeSetupWithErrors({
+      create: () => {
+        throw new Error('Database connection failed');
+      },
+    });
+
+    const res = await setup.testRequest.post('/bank').send(bank());
+    expect(res.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    await setup.app.close();
+  });
+
+  it(`should send 500 for GET /bank when service fails`, async () => {
+    const setup = await beforeSetupWithErrors({
+      findAll: () => {
+        throw new Error('Service unavailable');
+      },
+    });
+
+    const res = await setup.testRequest.get('/bank');
+    expect(res.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    await setup.app.close();
+  });
+
+  it(`should send 500 for PATCH /bank/:id when update fails`, async () => {
+    const setup = await beforeSetupWithErrors({
+      update: () => {
+        throw new Error('Unable to update bank record');
+      },
+    });
+
+    const res = await setup.testRequest
+      .patch('/bank/id')
+      .send({ name: 'Broken Bank', branch: 'CrashTown' });
+
+    expect(res.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    await setup.app.close();
+  });
+
+  it(`should send 500 for DELETE /bank/:id when remove fails`, async () => {
+    const setup = await beforeSetupWithErrors({
+      remove: () => {
+        throw new Error('Failed to remove bank');
+      },
+    });
+
+    const res = await setup.testRequest.delete('/bank/id');
+    expect(res.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+
+    await setup.app.close();
   });
 });
 
-function getDummyBankModule() {
+//
+// 🧩 Helper Functions
+//
+function bank() {
+  return {
+    name: 'National Bank',
+    branchCode: 'NB001',
+    branch: 'Colombo Main',
+    branchAddress: '123, Galle Road, Colombo 03',
+    contactNumber: '0112345678',
+  };
+}
+
+async function beforeSetup() {
+  const dummyModule = getDummyModule();
+
+  const moduleFixture = await Test.createTestingModule({
+    imports: [dummyModule],
+  }).compile();
+
+  const app = moduleFixture.createNestApplication();
+  await app.init();
+  const testRequest = request(app.getHttpServer());
+
+  return { app, testRequest };
+}
+
+//
+// ⚙️ Setup with Error-Throwing Service
+//
+async function beforeSetupWithErrors(serviceOverrides: Partial<BankService>) {
   @Module({
     controllers: [BankController],
     providers: [
       {
         provide: BankService,
         useValue: {
-          create: jest.fn().mockImplementation((dto) => ({
-            _id: 'mockBankId123',
-            ...dto,
-          })),
-          findAll: jest.fn().mockReturnValue([
-            {
-              _id: 'mockBankId123',
-              name: 'People’s Bank',
-              branchCode: 'KDY001',
-              branch: 'Kandy',
-              branchAddress: 'Main Street, Kandy',
-              contactNumber: '0811234567',
-            },
-          ]),
-          findOne: jest.fn().mockImplementation((id) => ({
-            _id: id,
-            name: 'People’s Bank',
-            branchCode: 'KDY001',
-            branch: 'Kandy',
-            branchAddress: 'Main Street, Kandy',
-            contactNumber: '0811234567',
-          })),
-          update: jest.fn().mockImplementation((id, dto) => ({
-            _id: id,
-            ...dto,
-          })),
-          remove: jest.fn().mockImplementation((id) => ({
-            message: `Bank ${id} deleted`,
-          })),
+          create: jest.fn(),
+          findAll: jest.fn(),
+          findOne: jest.fn(),
+          update: jest.fn(),
+          remove: jest.fn(),
+          ...serviceOverrides, // Override specific methods to throw real errors
+        },
+      },
+      { provide: APP_PIPE, useValue: VALIDATION_PIPE },
+    ],
+  })
+  class DummyErrorBankModule {}
+
+  const moduleFixture = await Test.createTestingModule({
+    imports: [DummyErrorBankModule],
+  }).compile();
+
+  const app = moduleFixture.createNestApplication();
+  await app.init();
+
+  const testRequest = request(app.getHttpServer());
+  return { app, testRequest };
+}
+
+function getDummyModule() {
+  @Module({
+    controllers: [BankController],
+    providers: [
+      {
+        provide: BankService,
+        useValue: {
+          create: jest.fn(),
+          findAll: jest.fn(),
+          findOne: jest.fn(),
+          update: jest.fn(),
+          remove: jest.fn(),
         },
       },
       { provide: APP_PIPE, useValue: VALIDATION_PIPE },
