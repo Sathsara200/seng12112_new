@@ -33,7 +33,6 @@ describe('City Controller (No Auth)', () => {
   });
 
   it(`should send 201 for POST /city`, async () => {
-    cityService.create = jest.fn().mockResolvedValue(city());
     const res = await testRequest.post('/city').send(city());
     expect(res.status).toBe(HttpStatus.CREATED);
   });
@@ -44,19 +43,16 @@ describe('City Controller (No Auth)', () => {
   });
 
   it(`should send 200 for GET /city`, async () => {
-    cityService.findAll = jest.fn().mockResolvedValue([city()]);
     const res = await testRequest.get('/city');
     expect(res.status).toBe(HttpStatus.OK);
   });
 
   it(`should send 200 for GET /city/id`, async () => {
-    cityService.findOne = jest.fn().mockResolvedValue(city());
     const res = await testRequest.get('/city/id');
     expect(res.status).toBe(HttpStatus.OK);
   });
 
   it(`should send 200 for PATCH /city/id`, async () => {
-    cityService.update = jest.fn().mockResolvedValue({ ...city(), name: 'Updated City' });
     const res = await testRequest.patch('/city/id').send({
       name: 'Updated City',
       district: 'Updated District',
@@ -70,12 +66,10 @@ describe('City Controller (No Auth)', () => {
   });
 
   it(`should send 200 for DELETE /city/id`, async () => {
-    cityService.remove = jest.fn().mockResolvedValue(true);
     const res = await testRequest.delete('/city/id');
     expect(res.status).toBe(HttpStatus.OK);
   });
 
-  // ---------- REALISTIC 500 ERROR TESTS BELOW ----------
 
   it(`should send 500 for POST /city when database fails`, async () => {
     cityService.create = jest.fn().mockImplementation(() => {
@@ -119,8 +113,6 @@ describe('City Controller (No Auth)', () => {
     expect(res.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
   });
 });
-
-// ------------------- Helpers -------------------
 
 function city() {
   return {

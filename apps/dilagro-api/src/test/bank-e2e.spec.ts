@@ -61,10 +61,6 @@ describe('Bank Controller (No Auth)', () => {
     expect(res.status).toBe(HttpStatus.OK);
   });
 
-  //
-  // 🔥 Real 500 Internal Server Error Tests (Service Failures)
-  //
-
   it(`should send 500 for POST /bank when service fails`, async () => {
     const setup = await beforeSetupWithErrors({
       create: () => {
@@ -121,9 +117,6 @@ describe('Bank Controller (No Auth)', () => {
   });
 });
 
-//
-// 🧩 Helper Functions
-//
 function bank() {
   return {
     name: 'National Bank',
@@ -148,9 +141,6 @@ async function beforeSetup() {
   return { app, testRequest };
 }
 
-//
-// ⚙️ Setup with Error-Throwing Service
-//
 async function beforeSetupWithErrors(serviceOverrides: Partial<BankService>) {
   @Module({
     controllers: [BankController],

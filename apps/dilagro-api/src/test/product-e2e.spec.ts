@@ -34,7 +34,6 @@ describe('Product Controller (No Auth)', () => {
   // ---------- SUCCESS CASES ----------
 
   it(`should send 201 for POST /product`, async () => {
-    productService.create = jest.fn().mockResolvedValue(product());
     const res = await testRequest.post('/product').send(product());
     expect(res.status).toBe(HttpStatus.CREATED);
   });
@@ -45,19 +44,16 @@ describe('Product Controller (No Auth)', () => {
   });
 
   it(`should send 200 for GET /product`, async () => {
-    productService.findAll = jest.fn().mockResolvedValue([product()]);
     const res = await testRequest.get('/product');
     expect(res.status).toBe(HttpStatus.OK);
   });
 
   it(`should send 200 for GET /product/id`, async () => {
-    productService.findOne = jest.fn().mockResolvedValue(product());
     const res = await testRequest.get('/product/id');
     expect(res.status).toBe(HttpStatus.OK);
   });
 
   it(`should send 200 for PATCH /product/id`, async () => {
-    productService.update = jest.fn().mockResolvedValue({ ...product(), name: 'Updated Product' });
     const res = await testRequest.patch('/product/id').send({
       name: 'Updated Product',
       price: 199.99,
@@ -72,12 +68,9 @@ describe('Product Controller (No Auth)', () => {
   });
 
   it(`should send 200 for DELETE /product/id`, async () => {
-    productService.remove = jest.fn().mockResolvedValue(true);
     const res = await testRequest.delete('/product/id');
     expect(res.status).toBe(HttpStatus.OK);
   });
-
-  // ---------- REALISTIC 500 ERROR TESTS ----------
 
   it(`should send 500 for POST /product when database fails`, async () => {
     productService.create = jest.fn().mockImplementation(() => {
